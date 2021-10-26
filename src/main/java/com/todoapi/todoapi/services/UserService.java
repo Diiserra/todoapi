@@ -22,7 +22,12 @@ public class UserService {
 
     public User findById(Long id) {
         Optional<User> obj = userRepository.findById(id);
-        return obj.get();
+        if (obj.isPresent()) {
+            return obj.get();
+        } else {
+            return null;
+        }
+
     }
 
 }
