@@ -1,0 +1,22 @@
+package com.todoapi.todoapi.services;
+
+import java.util.List;
+
+import com.todoapi.todoapi.model.User;
+import com.todoapi.todoapi.repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<User> findAll() {
+        List<User> usersList = userRepository.findAll();
+        return usersList;
+    }
+
+}
