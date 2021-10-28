@@ -2,12 +2,15 @@ package com.todoapi.todoapi.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,21 +20,26 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTask;
+    @Column(nullable = false)
     private String description;
+    @Temporal(TemporalType.DATE)
     private Date dateCreate;
+    @Column(nullable = false)
+    private String isChecked;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "fk_user_id")
+    @JoinColumn(name = "id_user")
     private User user;
 
     public Task() {
     }
 
-    public Task(Long idTask, String description, Date dateCreate, User user) {
+    public Task(Long idTask, String description, Date dateCreate, String isChecked, User user) {
         this.idTask = idTask;
         this.description = description;
         this.dateCreate = dateCreate;
+        this.isChecked = isChecked;
         this.user = user;
     }
 
@@ -57,6 +65,14 @@ public class Task {
 
     public void setDateCreate(Date dateCreate) {
         this.dateCreate = dateCreate;
+    }
+
+    public String getIsChecked() {
+        return isChecked;
+    }
+
+    public void setIsChecked(String isChecked) {
+        this.isChecked = isChecked;
     }
 
     public User getUser() {
