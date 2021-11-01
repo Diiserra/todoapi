@@ -2,10 +2,14 @@ package com.todoapi.todoapi.services;
 
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
+import com.todoapi.todoapi.exception.ResourceNotFoundException;
 import com.todoapi.todoapi.model.User;
 import com.todoapi.todoapi.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +24,7 @@ public class UserService {
 
     public User findByEmail(String email) {
         Optional<User> optUser = userRepository.findByEmail(email);
-        // return optUser.orElseThrow(() -> new Exception(null));
-        if (optUser.isEmpty()) {
-            return optUser.orElseThrow();
-        } else {
-            return optUser.get();
-        }
+        return optUser.orElseThrow(() -> new ResourceNotFoundException(email));
 
     }
 
@@ -43,8 +42,8 @@ public class UserService {
         User user = findByEmail(email);
         try {
             userRepository.deleteById(user.getId());
-        } catch (Exception e) {
-            // throw new Exception();
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(email);
         }
     }
 
@@ -54,10 +53,9 @@ public class UserService {
             updateData(entity, obj);
             entity = userRepository.save(entity);
             return entity;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
         }
-        return null;
     }
 
     public void updateData(User entity, User obj) {
